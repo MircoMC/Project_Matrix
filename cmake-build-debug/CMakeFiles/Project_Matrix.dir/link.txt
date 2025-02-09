@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/Project_Matrix.dir/main.cpp.o -o Project_Matrix 

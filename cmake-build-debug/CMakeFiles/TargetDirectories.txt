@@ -1,0 +1,3 @@
+/mnt/c/Users/casti/CLionProjects/Project-Matrix/cmake-build-debug/CMakeFiles/Project_Matrix.dir
+/mnt/c/Users/casti/CLionProjects/Project-Matrix/cmake-build-debug/CMakeFiles/edit_cache.dir
+/mnt/c/Users/casti/CLionProjects/Project-Matrix/cmake-build-debug/CMakeFiles/rebuild_cache.dir
