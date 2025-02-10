@@ -8,12 +8,12 @@ public:
     Matrix(int i, int j) : i(i), j(j), Matrixbuffer(std::make_unique<double[]>(i * j)) {
     }
 
-    void setI(int i) {
-        Matrix::i = i;
+    void setI(int row) {
+        row = i;
     }
 
-    void setJ(int j) {
-        Matrix::j = j;
+    void setJ(int col) {
+        col = j;
     }
 
     int getJ() const {
@@ -24,19 +24,19 @@ public:
         return i;
     }
 
-    void insert(int element, int pos_x, int pos_y) {
+    void insert(double element, int pos_x, int pos_y) {
         bool valid = ValidPos(pos_x, pos_y);
         if (!valid) {
             std::cout << "Unvalid Position." << std::endl;
             return;
         }
-        Matrixbuffer[pos_y * i + pos_x] = element;
+        Matrixbuffer[pos_x * j + pos_y] = element;
     }
 
-    int getElement(int posx, int posy) const {
+    double getElement(int posx, int posy) const {
         bool valid = ValidPos(posx, posy);
         if (valid)
-            return Matrixbuffer[posy * i + posx];
+            return Matrixbuffer[posx * j + posy];
         else
             return 0;
     }
@@ -87,7 +87,7 @@ public:
         std::vector<double> A(m * n);
         for (int r = 0; r < m; r++) {
             for (int c = 0; c < n; c++) {
-                A[r * n + c] = static_cast<double>( getElement(r, c) );
+                A[r * n + c] = static_cast<double>( getElement(r, c));
             }
         }
 
@@ -129,18 +129,36 @@ public:
             // Passa alla riga successiva per il prossimo pivot
             currentRow++;
         }
-        std::cout << "Rank:"<< rank << std::endl;
+        std::cout << "Rank:" << rank << std::endl;
         return rank;
     }
 
 
-    void PrintMatrix(){
-        for(int l = 0; l<getI() ; l++){
-            for(int k = 0;k<getJ();k++){
-                std::cout<< getElement(l,k) << " ";
+    void PrintMatrix() {
+        for (int l = 0; l < getI(); l++) {
+            for (int k = 0; k < getJ(); k++) {
+                std::cout << getElement(l, k) << " ";
             }
             std::cout << std::endl;
         }
+    }
+
+    void Transpoised() {
+        int m = i; // numero di righe
+        int n = j; // numero di colonne
+
+        // Copia della matrice in un vettore di double per una maggiore precisione
+
+        Matrix B(n, m);
+
+        for (int l = 0; l < n; l++) {
+            for (int k = 0; k < m; k++) {
+                B.insert(getElement(k, l), l, k);
+            }
+        }
+
+        B.PrintMatrix();
+
     }
 
 private:
@@ -156,19 +174,19 @@ private:
 };
 
 int main() {
-    Matrix matrix(3,3);
-    Matrix matrix2(3,3);
-
+    Matrix matrix(3, 3);
+    Matrix matrix2(3, 3);
+    Matrix matrix3(2, 3);
     //first Matrix
-    matrix.insert(1,0,0);
-    matrix.insert(2,0,1);
-    matrix.insert(3,0,2);
-    matrix.insert(4,1,0);
-    matrix.insert(5,1,1);
-    matrix.insert(6,1,2);
-    matrix.insert(7,2,0);
-    matrix.insert(8,2,1);
-    matrix.insert(9,2,2);
+    matrix.insert(1, 0, 0);
+    matrix.insert(2, 0, 1);
+    matrix.insert(3, 0, 2);
+    matrix.insert(4, 1, 0);
+    matrix.insert(5, 1, 1);
+    matrix.insert(6, 1, 2);
+    matrix.insert(7, 2, 0);
+    matrix.insert(8, 2, 1);
+    matrix.insert(9, 2, 2);
 
     //the second
     matrix2.insert(9, 0, 0);
@@ -181,19 +199,31 @@ int main() {
     matrix2.insert(2, 2, 1);
     matrix2.insert(1, 2, 2);
 
+    //third matrix
+    matrix3.insert(1, 0, 0);
+    matrix3.insert(2, 0, 1);
+    matrix3.insert(3, 0, 2);
+    matrix3.insert(4, 1, 0);
+    matrix3.insert(5, 1, 1);
+    matrix3.insert(6, 1, 2);
 
     //first Matrix
     std::cout << "First Matrix:" << " " << std::endl;
-    matrix.PrintMatrix(); std::cout << " " << std::endl;
+    matrix.PrintMatrix();
+    std::cout << " " << std::endl;
     std::cout << "Second Matrix:" << " " << std::endl;
     matrix2.PrintMatrix();
+    std::cout << "third Matrix:" << " " << std::endl;
+    matrix3.PrintMatrix();
 
     std::cout << "Sum of both:" << std::endl;
     // Uso della funzione statica per ottenere la somma
     Matrix result = matrix + matrix2;
     matrix.Rank();
 
-
-
+    std::cout << "Matrix 3: Transpoised" << std::endl;
+    matrix3.Transpoised();
+    std::cout << "Matrix 2: Transpoised" << std::endl;
+    matrix2.Transpoised();
 
 }
