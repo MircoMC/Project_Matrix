@@ -161,6 +161,64 @@ public:
 
     }
 
+    double Determinant() const {
+        if (i != j) {
+            std::cout << "Il determinante è definito solo per matrici quadrate." << std::endl;
+            return 0.0;
+        }
+        int n = i; // Numero di righe (uguale al numero di colonne)
+
+        // Copia la matrice in un vettore di double per i calcoli
+        std::vector<double> A(n * n);
+        for (int r = 0; r < n; r++) {
+            for (int c = 0; c < n; c++) {
+                // Attenzione: nel nostro metodo getElement usiamo l'indicizzazione (x, y) dove x è la colonna e y la riga.
+                A[r * n + c] = static_cast<double>( getElement(c, r) );
+            }
+        }
+
+        double det = 1.0;           // Inizialmente il determinante è 1
+        const double eps = 1e-9;      // Tolleranza per considerare un valore come zero
+
+        // Algoritmo di eliminazione gaussiana con pivoting parziale
+        for (int col = 0; col < n; col++) {
+            // Trova il pivot: la riga con il massimo valore assoluto in questa colonna (dalla riga col in poi)
+            int pivot = col;
+            for (int r = col + 1; r < n; r++) {
+                if (std::fabs(A[r * n + col]) > std::fabs(A[pivot * n + col])) {
+                    pivot = r;
+                }
+            }
+
+            // Se il pivot è praticamente zero, il determinante è zero
+            if (std::fabs(A[pivot * n + col]) < eps) {
+                return 0.0;
+            }
+
+            // Se il pivot non è nella riga corrente, scambia le righe
+            if (pivot != col) {
+                for (int k = col; k < n; k++) {
+                    std::swap(A[col * n + k], A[pivot * n + k]);
+                }
+                // Ogni scambio di righe cambia il segno del determinante
+                det = -det;
+            }
+
+            // Moltiplica il determinante per il valore del pivot corrente
+            det *= A[col * n + col];
+
+            // Elimina gli elementi sotto il pivot
+            for (int r = col + 1; r < n; r++) {
+                double factor = A[r * n + col] / A[col * n + col];
+                for (int k = col; k < n; k++) {
+                    A[r * n + k] -= factor * A[col * n + k];
+                }
+            }
+        }
+
+        return det;
+    }
+
 private:
     int i;
     int j;
@@ -226,4 +284,5 @@ int main() {
     std::cout << "Matrix 2: Transpoised" << std::endl;
     matrix2.Transpoised();
 
+   std::cout << matrix3.Determinant() << std::endl;
 }
